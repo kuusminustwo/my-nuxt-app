@@ -6,20 +6,13 @@
       <div class="round-icon"></div>
     </div>
     <div class="login-container">
-      <!-- <div class="left-half"></div> -->
-      <!-- <div class="separator"></div> -->
+      <div class="left-half"></div>
+      <div class="separator"></div>
       <div class="right-half">
         <div class="animated-shape"></div>
         <div class="login-card fade-in">
           <h2>Нэвтрэх</h2>
-          <!-- <form @submit.prevent="login">
-            <label for="username">Username:</label>
-            <input type="text" id="username" v-model="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" required>
-            <button type="submit">Login</button>
-          </form> -->
-          <form @submit.prevent="login">
+          <form @submit.prevent="handleLogin">
             <div class="form-group">
               <label for="username">Хэрэглэгчийн нэр:</label>
               <input type="text" id="username" v-model="username" required @focus="animateInput" />
@@ -28,7 +21,7 @@
               <label for="password">Нууц үг:</label>
               <input type="password" id="password" v-model="password" required @focus="animateInput" />
             </div>
-            <button type="submit">Нэвтрэх</button>
+            <button @click="handleButtonClick('home')">Нэвтрэх</button>
           </form>
         </div>
       </div>
@@ -36,40 +29,37 @@
   </div>
 </template>
 
-<script>
-const animateInput = (event) => {
-  event.target.classList.add('animate-input')
-}
-export default {
-  data () {
-    return {
-      username: '',
-      password: ''
-    }
-  },
-  methods: {
-    async login () {
-      try {
-        const response = await this.$axios.$post('/login', {
-          username: this.username,
-          password: this.password
-        })
-        // Handle successful login (e.g., store token in localStorage, redirect)
-        console.log('Login successful:', response)
-        // Example: Store token in localStorage (replace with your actual token handling)
-        localStorage.setItem('token', response.data.token)
-        // console.log(response.data.token)
-        // Redirect to another page after successful login
-        this.$router.push('/profile')
-      } catch (error) {
-        console.error('Error logging in:', error)
-        // Handle login error (show error message, reset form, etc.)
-      }
-    },
-    animateInput
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const username = ref('');
+const password = ref('');
+
+const handleLogin = () => {
+  if (username.value === 'user' && password.value === '1234') {
+    router.push('/home');
+  } else {
+    alert('Нэвтрэх нэр эсвэл нууц үг буруу байна');
   }
-}
+};
+
+const handleButtonClick = (buttonType) => {
+  switch (buttonType) {
+    case 'home':
+      router.push('/home');
+      break;
+    default:
+      break;
+  }
+};
+
+const animateInput = (event) => {
+  event.target.classList.add('animate-input');
+};
 </script>
+
 <style scoped>
 .login-container {
   display: flex;
